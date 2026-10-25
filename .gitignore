@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# 渲染与配音产物（不入库）
+*.mp4
+*.wav
+*.ass
+*.png
+*.jpg
+_voice/
+_video/
+成片/
+_审片/
+_qa*/
+_渲染验证/
+
+# 日志与临时文件
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# 本地个人配置（上传台根目录等）
+.wxch_local.json

@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>视频号上传台 · 三国演义动画 36 部待发</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root{
+    --bg:#0B0F17; --panel:#131A26; --panel2:#1A2331; --line:#26313F;
+    --ink:#E8EEF7; --dim:#8B9AAE; --dim2:#5D6B7C;
+    --accent:#4ADE80; --amber:#F59E0B; --rose:#FB7185; --blue:#60A5FA;
+  }
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    font-size:14px; line-height:1.6; padding:28px 24px 80px;
+  }
+  .wrap{ max-width:1560px; margin:0 auto; }
+  h1{ font-size:24px; font-weight:800; letter-spacing:.5px; }
+  h1 .n{ color:var(--accent); font-variant-numeric:tabular-nums; }
+  .sub{ color:var(--dim); margin-top:6px; font-size:13px; }
+  .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+
+  .note{
+    background:var(--panel); border:1px solid var(--line); border-left:3px solid var(--amber);
+    border-radius:10px; padding:14px 16px; margin:18px 0; color:var(--dim); font-size:13px;
+  }
+  .note b{ color:var(--amber); }
+  .note summary{ cursor:pointer; color:var(--ink); font-weight:600; }
+  .note[open] summary{ margin-bottom:8px; }
+
+  .steps{
+    background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    padding:16px 18px; margin:16px 0 22px;
+  }
+  .steps h2{ font-size:15px; font-weight:700; margin-bottom:10px; }
+  .steps ol{ list-style:none; counter-reset:s; display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:8px 20px; }
+  .steps li{ counter-increment:s; color:var(--dim); font-size:13px; padding-left:26px; position:relative; }
+  .steps li::before{
+    content:counter(s); position:absolute; left:0; top:1px; width:19px; height:19px;
+    background:var(--panel2); border:1px solid var(--line); border-radius:6px;
+    color:var(--accent); font-size:11px; font-weight:700; display:grid; place-items:center;
+  }
+  .steps li b{ color:var(--ink); font-weight:600; }
+  .steps a{ color:var(--blue); }
+
+  .bar{
+    position:sticky; top:0; z-index:20; background:rgba(11,15,23,.92); backdrop-filter:blur(8px);
+    padding:12px 0; border-bottom:1px solid var(--line); margin-bottom:18px;
+  }
+  .bar .row{ gap:8px; }
+  input[type=search], select{
+    background:var(--panel); border:1px solid var(--line); color:var(--ink);
+    border-radius:8px; padding:7px 11px; font-size:13px; font-family:inherit; outline:none;
+  }
+  input[type=search]{ width:230px; }
+  input[type=search]:focus, select:focus{ border-color:var(--accent); }
+  .chip{
+    background:var(--panel); border:1px solid var(--line); color:var(--dim);
+    border-radius:999px; padding:6px 13px; font-size:12.5px; cursor:pointer; user-select:none;
+  }
+  .chip:hover{ border-color:var(--dim2); color:var(--ink); }
+  .chip.on{ background:var(--accent); border-color:var(--accent); color:#06240F; font-weight:700; }
+  .spacer{ flex:1; }
+  .stat{ color:var(--dim2); font-size:12.5px; font-variant-numeric:tabular-nums; }
+  .stat b{ color:var(--accent); }
+
+  .grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(330px,1fr)); gap:16px; }
+  .card{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px; overflow:hidden;
+    display:flex; flex-direction:column; transition:border-color .15s, transform .15s;
+  }
+  .card:hover{ border-color:#3A4A5E; transform:translateY(-2px); }
+  .card.done{ opacity:.5; }
+  .card.done .badge::after{ content:' ✓'; }
+
+  .cover{ position:relative; aspect-ratio:16/9; background:#070A10; cursor:zoom-in; }
+  .cover img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .cover .ct{
+    position:absolute; left:10px; bottom:8px; font-size:11px; color:var(--dim);
+    background:rgba(7,10,16,.72); padding:3px 8px; border-radius:6px; font-variant-numeric:tabular-nums;
+  }
+  .badge{
+    position:absolute; right:10px; top:10px; font-size:11px; font-weight:800; letter-spacing:1px;
+    padding:3px 9px; border-radius:6px; background:var(--accent); color:#06240F;
+  }
+  .badge.redo{ background:var(--amber); color:#2B1A00; }
+
+  .body{ padding:13px 15px 15px; display:flex; flex-direction:column; gap:9px; flex:1; }
+  .t{ font-size:15.5px; font-weight:700; line-height:1.35; }
+  .t2{ color:var(--dim); font-size:12.5px; margin-top:-4px; }
+  .meta{ display:flex; gap:6px; flex-wrap:wrap; font-size:11px; color:var(--dim2); }
+  .meta span{ background:var(--panel2); border-radius:5px; padding:2px 7px; font-variant-numeric:tabular-nums; }
+  .meta span.gate{ color:var(--accent); }
+  .warn{ font-size:11.5px; color:var(--amber); background:rgba(245,158,11,.09); border-radius:6px; padding:5px 8px; }
+
+  .copyrow{ display:flex; gap:6px; flex-wrap:wrap; }
+  button{
+    font-family:inherit; cursor:pointer; border-radius:7px; font-size:12px; padding:6px 11px;
+    background:var(--panel2); border:1px solid var(--line); color:var(--ink); transition:all .12s;
+  }
+  button:hover{ border-color:var(--accent); color:var(--accent); }
+  button.p{ background:var(--accent); border-color:var(--accent); color:#06240F; font-weight:700; }
+  button.p:hover{ background:#6EE7A0; color:#06240F; }
+  button.ghost{ background:transparent; }
+  .path{
+    font-size:11px; color:var(--dim2); word-break:break-all; background:#070A10;
+    border:1px solid var(--line); border-radius:7px; padding:6px 9px; font-family:ui-monospace,Consolas,monospace;
+  }
+  .foot{ display:flex; align-items:center; gap:8px; margin-top:auto; padding-top:4px; }
+  .foot label{ font-size:12px; color:var(--dim); cursor:pointer; user-select:none; display:flex; align-items:center; gap:6px; }
+  .foot input{ accent-color:var(--accent); width:14px; height:14px; cursor:pointer; }
+
+  .lightbox{
+    position:fixed; inset:0; background:rgba(4,6,10,.94); z-index:100; display:none;
+    place-items:center; padding:40px; cursor:zoom-out;
+  }
+  .lightbox.on{ display:grid; }
+  .lightbox img{ max-width:100%; max-height:88vh; border-radius:10px; box-shadow:0 20px 70px rgba(0,0,0,.7); }
+  .lightbox video{ max-width:100%; max-height:88vh; border-radius:10px; }
+  .toast{
+    position:fixed; left:50%; bottom:34px; transform:translateX(-50%) translateY(20px);
+    background:var(--accent); color:#06240F; font-weight:700; font-size:13px;
+    padding:9px 20px; border-radius:999px; opacity:0; pointer-events:none; transition:all .22s; z-index:200;
+  }
+  .toast.on{ opacity:1; transform:translateX(-50%) translateY(0); }
+  .empty{ color:var(--dim2); text-align:center; padding:60px 0; font-size:14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>视频号上传台 <span class="n" id="cnt">40</span> 部待发</h1>
+  <div class="sub">三国演义水墨动画系列 · 素材已按视频号发表页字段组织好 · 人工上传 + 勾「定时发表」即半自动</div>
+
+  <details class="note" open>
+    <summary><b>为什么没有「一键推送草稿箱」？</b>（点击收起）</summary>
+    <div style="margin-top:8px">
+      视频号（WeChat Channels）<b>没有对外开放的发布 / 上传 API</b>。腾讯只对企业主体开放了「企业微信 → 视频号」这一条通道，
+      且要求视频号已绑定到该企业微信主体；个人号用不了。我检索了当前所有可用连接器，没有任何一个提供视频号草稿推送能力。<br><br>
+      因此本系列从立项起就采用<b>「待发箱半自动」</b>架构：我负责把所有素材、文案、门禁做到可直接上传的状态，
+      最后一步上传与勾选定时发表由你在 <a href="https://channels.weixin.qq.com" target="_blank" style="color:var(--blue)">视频号助手</a> 完成。
+      这是平台规则内<b>最自动</b>的形态 —— 定时发表一旦勾上，发布是平台自动执行的。
+    </div>
+  </details>
+
+  <div class="steps">
+    <h2>上传六步（每部约 2–3 分钟）</h2>
+    <ol>
+      <li>打开 <a href="https://channels.weixin.qq.com" target="_blank"><b>视频号助手</b></a> 网页版并扫码登录，点「发表视频」</li>
+      <li>上传本卡片里的 <b>.mp4</b>（横屏 1920×1080，24.8 秒）</li>
+      <li>封面点「更换封面」→ 上传本卡片的 <b>封面.jpg</b>（已按竖屏安全区做模糊填充）</li>
+      <li>依次点卡上的 <b>复制标题 / 描述 / 话题</b>，粘到对应输入框</li>
+      <li><b>勾「定时发表」</b>选定日期时间 —— 这一步是平台替你自动发布的关键</li>
+      <li>回到本页把该卡勾成「已发」，进度自动存在本机</li>
+    </ol>
+  </div>
+
+  <div class="bar">
+    <div class="row">
+      <input type="search" id="q" placeholder="搜片名 / 标题 / 关键词…">
+      <select id="batch"><option value="">全部批次</option></select>
+      <span class="chip on" data-f="all">全部</span>
+      <span class="chip" data-f="new">最新批次</span>
+      <span class="chip" data-f="redo">本次重制</span>
+      <span class="chip" data-f="todo">未发</span>
+      <span class="spacer"></span>
+      <span class="stat" id="stat"></span>
+    </div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" style="display:none">没有匹配的片子</div>
+
+  <div style="margin-top:34px;color:var(--dim2);font-size:12px">
+    素材根目录：<span style="font-family:ui-monospace,Consolas,monospace" id="rootDisp">./</span>
+    <button class="btn" style="margin-left:8px;padding:2px 10px;font-size:11px" onclick="setRoot()">设置根目录</button>
+    &nbsp;·&nbsp; 上传前请确认 manifest 的 gate.passed = true（<span id="gateStat">—</span>）
+  </div>
+</div>
+
+<div class="lightbox" id="lb"><img id="lbimg" alt=""></div>
+<div class="toast" id="toast">已复制</div>
+
+<script>
+const DATA = {"items": [{"folder": "2026-10-10-典韦", "batch": "2026-10-10", "name": "典韦", "key": "dianwei", "title": "典韦 · 独守辕门而死", "sub": "水墨动画 · 25秒看完曹操的贴身猛将", "desc": "水墨动画版《典韦》，25 秒讲完曹操最舍不得的那一员猛将。
+
+陈留己吾 → 逐虎过涧 → 帐下壮士有典君，提一双戟八十斤 → 濮阳先登，短戟所抵无不应手倒 → 宛城夜变，双戟先为贼盗去 → 独守辕门，贼不得入 → 创重发，瞋目大骂而死 → 太祖为流涕，亲自临哭，遣归葬襄邑。
+
+他没有单骑救主的传奇，也没有定军山那一箭。整部三国里，他是唯一一个站在门口、让所有人过不去的人。
+
+本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#典韦", "#宛城之战", "#历史", "#水墨动画", "#AI动画", "#知识分享"], "video": "典韦.mp4", "cover": "封面.jpg", "cover_time": 7.9, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 15.2, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": ""}, {"folder": "2026-10-10-老将黄忠", "batch": "2026-10-10", "name": "老将黄忠", "key": "huangzhong", "title": "老将黄忠 · 定军山斩夏侯渊", "sub": "水墨动画 · 24秒看完老将传奇", "desc": "水墨动画版《老将黄忠》，24 秒讲完三国最硬的一位老将。
+
+南阳从军 → 守长沙 → 荆州归刘 → 常为先锋 → 定军山一战阵斩夏侯渊 → 拜后将军 → 勇冠三军 → 谥刚侯。
+
+别人是少年成名，他是七十岁才等来那一箭。
+
+本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#黄忠", "#定军山", "#历史", "#水墨动画", "#AI动画", "#知识分享"], "video": "老将黄忠.mp4", "cover": "封面.jpg", "cover_time": 13.0, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 14.88, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": ""}, {"folder": "2026-10-10-马超", "batch": "2026-10-10", "name": "锦马超", "key": "machao", "title": "锦马超 · 一枪震潼关", "sub": "水墨动画 · 25秒看完白袍银甲", "desc": "水墨动画版《锦马超》，25 秒讲完三国最锋利的一场青春。
+
+扶风将门 → 潼关举兵 → 渭南突击 → 曹公叹「马儿不死，吾无葬地」→ 离间计破孤骑西走 → 引兵归刘、璋即稽首 → 拜骠骑将军 → 临终上疏。
+
+曹操一生怕过的人不多，马超算一个。可惜那之后，再没有人敢用他。
+
+本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#马超", "#潼关", "#历史", "#水墨动画", "#AI动画", "#知识分享"], "video": "锦马超.mp4", "cover": "封面.jpg", "cover_time": 4.4, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 17.46, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": ""}, {"folder": "2026-10-11-三国：一口气讲完", "batch": "2026-10-11", "name": "三国：一口气讲完", "key": "sanguo", "title": "三国：一口气讲完", "sub": "从黄巾之乱到三家归晋 · 75秒", "desc": "75 秒，一口气讲完三国。
+
+184 黄巾之乱 → 189 董卓焚洛阳 → 190 十八路诸侯 → 200 官渡 → 208 赤壁 → 214 入主西川 → 219 定军山 / 麦城 → 220 曹丕受禅 → 222 夷陵 → 223 白帝城托孤 → 225 七擒孟获 → 234 五丈原 → 249 高平陵 → 263 偷渡阴平 → 280 三家归晋。
+
+16 幕，16 张 AI 立绘，复古二次元 + 霓虹配色，鼓点卡拍。
+
+角色插画由 AI 生成，配音与字幕为 AI 合成（无背景音乐），动效由代码逐帧渲染。", "tags": ["#三国", "#一口气看完", "#赤壁", "#历史", "#AI动画", "#知识分享", "#霓虹"], "video": "三国：一口气讲完.mp4", "cover": "封面.jpg", "cover_time": 21.0, "spec": {"w": 1080, "h": 1920, "dur": 75.0, "size_mb": 100.48, "orientation": "竖屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": [], "badge": ""}, {"folder": "2026-10-11-于禁", "batch": "2026-10-11", "name": "于禁", "key": "yujin", "title": "于禁 · 在乱能整，晚节不终", "sub": "水墨动画 · 25秒看完曹魏五子良将之首", "desc": "水墨动画版《于禁》，25 秒讲完三国最让人唏嘘的一员名将。
+
+泰山钜平起于行伍 → 宛城之乱，在乱能整 → 官渡焚屯三十余，斩获数千 → 昌豨虽旧友，法不可枉 → 汉水泛溢，七军俱没 → 遂降，囚于江陵 → 北归故国，须发皓白 → 陵屋见降服之画，惭恚而薨。
+
+曹操说他「虽古名将，何以加之」。可最后击垮他的不是敌人，是曹丕让人画在陵屋墙上的那一幅画。
+
+本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#于禁", "#水淹七军", "#历史", "#水墨动画", "#AI动画", "#知识分享"], "video": "于禁.mp4", "cover": "封面.jpg", "cover_time": 8.7, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 17.52, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": ""}, {"folder": "2026-10-11-太史慈", "batch": "2026-10-11", "name": "太史慈", "key": "taishici", "title": "太史慈 · 弦不虚发", "sub": "水墨动画 · 25秒看完东莱猛士", "desc": "水墨动画版《太史慈》，25 秒讲完三国最讲信义的弓。
+
+东莱奏曹 → 北海突围、单骑请兵于刘备 → 猿臂善射、弦不虚发 → 神亭酣战、与孙策互易其物 → 举贤任能、委以南方 → 丈夫生世，当带三尺之剑以立功名 → 年四十一卒，孙权甚悼惜之。
+
+信义比箭更准，是这个人物一生的注脚。
+
+本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#太史慈", "#历史", "#水墨动画", "#AI动画", "#知识分享"], "video": "太史慈.mp4", "cover": "封面.jpg", "cover_time": 7.6, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 15.89, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": ""}, {"folder": "2026-10-11-姜维", "batch": "2026-10-11", "name": "姜维", "key": "jiangwei", "title": "姜维 · 一计害三贤", "sub": "水墨动画 · 25秒看完蜀汉最后的执念", "desc": "水墨动画版《姜维》，25 秒讲完三国最不肯放手的那一员。
+
+天水麒麟儿 → 祁山归亮 → 继志北伐、九伐中原 → 洮西大捷斩首万计 → 段谷之败星散流离 → 避黄皓屯田沓中 → 剑阁拒钟会、会不能克 → 一计害三贤，剖腹胆如斗大。
+
+诸葛亮死后，蜀汉又撑了三十年，撑的人姓姜。
+
+本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#姜维", "#北伐", "#历史", "#水墨动画", "#AI动画", "#知识分享"], "video": "姜维.mp4", "cover": "封面.jpg", "cover_time": 3.7, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 14.76, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": ""}, {"folder": "2026-10-11-常山赵子龙", "batch": "2026-10-11", "name": "常山赵子龙", "key": "zhaoyun", "title": "常山赵子龙 · 一身是胆", "sub": "水墨动画 · 25秒看完一代名将", "desc": "水墨动画版《常山赵子龙》，25 秒讲完一代名将的一生。
+
+常山从军 → 磐河救公孙瓒 → 长坂坡单骑救主 → 截江夺阿斗 → 汉水空营退敌 → 箕谷全身而退 → 一身是胆 → 谥顺平侯。
+
+赵云一生不争功、不结党，刘备一句「子龙一身都是胆」，是三国里最干净的一条命。
+
+本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#赵云", "#长坂坡", "#历史", "#水墨动画", "#AI动画", "#知识分享"], "video": "常山赵子龙.mp4", "cover": "封面.jpg", "cover_time": 8.0, "spec": {"w": 1920, "h": 1080, "dur": 25.4, "size_mb": 15.81, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": ""}, {"folder": "2026-10-11-庞德", "batch": "2026-10-11", "name": "庞德", "key": "pangde", "title": "庞德 · 宁为国家鬼", "sub": "水墨动画 · 25秒看完白马将军", "desc": "水墨动画版《庞德》，25 秒讲完三国与于禁互为镜像的一位壮士。
+
+南安狟道人 → 为军锋，亲斩郭援 → 常乘白马，射羽中额 → 随众降魏，拜立义将 → 避水上堤，箭不虚发 → 水盛船覆，立而不跪 → 宁为国家鬼，不为贼将 → 太祖流涕，谥曰壮侯。
+
+他与于禁同陷汉水，一个立而不跪，一个晚节不终。
+
+本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#庞德", "#于禁", "#白马将军", "#历史", "#水墨动画", "#AI动画", "#知识分享"], "video": "庞德.mp4", "cover": "封面.jpg", "cover_time": 7.5, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 17.12, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": ""}, {"folder": "2026-10-11-田丰", "batch": "2026-10-11", "name": "田丰", "key": "tianfeng", "title": "田丰 · 不用吾言，果为所笑", "sub": "水墨动画 · 25秒看完袁绍的首席谋主", "desc": "水墨动画版《田丰》，25 秒讲完三国最让人扼腕的一位谋主。
+
+钜鹿人，天姿瑰杰 → 劝绍袭许，绍以子病辞 → 谏宜久持，绍怒械系之 → 囹圄之中，静待官渡 → 乌巢火起，绍军大溃 → 逢纪进谮，抚掌大笑 → 绍惭其言，遂害田丰 → 不用吾言，果为所笑。
+
+他算对了每一件事，却算不透袁绍的面子。
+
+本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#田丰", "#袁绍", "#官渡", "#历史", "#水墨动画", "#AI动画", "#知识分享"], "video": "田丰.mp4", "cover": "封面.jpg", "cover_time": 10.6, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 14.63, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": ""}, {"folder": "2026-10-11-祢衡", "batch": "2026-10-11", "name": "祢衡", "key": "miheng", "title": "祢衡 · 渔阳掺挝", "sub": "水墨动画 · 25秒看完二十六岁的狂士", "desc": "水墨动画版《祢衡》，25 秒讲完三国最狂的一位才子。
+
+平原般人，少有才辩 → 称狂不往，傲视许都 → 操录鼓史，欲以贱辱 → 渔阳掺挝，声节殊妙 → 徐脱衣褐，颜色不怍 → 揽笔作赋，文无加点 → 出言不逊，骂座而死 → 葬于江渚，名鹦鹉洲。
+
+他二十六岁就死了，死前骂遍了所有人，包括他自己。
+
+本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#祢衡", "#鹦鹉赋", "#历史", "#水墨动画", "#AI动画", "#知识分享"], "video": "祢衡.mp4", "cover": "封面.jpg", "cover_time": 10.6, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 16.0, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": ""}, {"folder": "2026-10-11-陈宫", "batch": "2026-10-11", "name": "陈宫", "key": "chengong", "title": "陈宫 · 刚直壮烈", "sub": "水墨动画 · 25秒看完捉放曹的那个人", "desc": "水墨动画版《陈宫》，25 秒讲完三国最讲信义的一位谋士。
+
+中牟县吏 → 见曹操而义之，夜释之弃官相从 → 说邈迎操，领兖州 → 濮阳火起，叛操迎布 → 画策下邳，佐布相拒 → 操决泗沂，水灌下邳 → 白门楼上，但坐此人 → 请出就戮，引颈不还顾 → 操养其母，嫁其女。
+
+他放走过曹操，也背叛过曹操；到死那一刻，曹操还为他流了泪。
+
+本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#陈宫", "#吕布", "#捉放曹", "#历史", "#水墨动画", "#AI动画", "#知识分享"], "video": "陈宫.mp4", "cover": "封面.jpg", "cover_time": 16.5, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 15.19, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": ""}, {"folder": "2026-10-12-荀彧", "batch": "2026-10-12", "name": "荀彧", "key": "xunyu", "title": "荀彧 · 荀令留香", "sub": "水墨动画 · 25秒看完曹操的首席谋主", "desc": "水墨动画版《荀彧》，25 秒讲完三国最被辜负的一位王佐。
+
+颍川名士 → 弃绍从曹，太祖曰「吾之子房」→ 迎天子都许，深根固本 → 每征伐在外，常居中持重 → 官渡一书，谏止退兵 → 前后所举，皆命世大才 → 谏九锡曰不宜 → 空食盒，以忧而薨 → 荀令留香，谥曰敬侯。
+
+他替曹操把天下的人才都找齐了，最后却连一个九锡都不肯为曹操拟。
+
+本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#荀彧", "#曹操", "#历史", "#水墨动画", "#AI动画", "#知识分享"], "video": "荀彧.mp4", "cover": "封面.jpg", "cover_time": 7.5, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 14.9, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": ""}, {"folder": "2026-10-13-于吉", "batch": "2026-10-13", "name": "于吉", "key": "yuji", "title": "于吉 · 被孙策所斩的道士", "sub": "水墨动画 · 30秒看完符水奇人", "desc": "水墨动画版《于吉》，30 秒讲完三国最神秘的一位道士。
+
+琅琊于吉，鹤氅藜杖 → 以符水治病，吴会争拜、焚香伏道 → 小霸王孙策独忌其惑众 → 立坛祈雨、云合雨倾 → 雨霁策怒，竟斩于市，青气投东北 → 策照镜中，见吉索命 → 一存一亡：左慈骑鹤，于吉授首 → 金疮迸裂，碧眼儿坐领江东。
+
+注意：于吉符水治病、被孙策所斩，见《江表传》（裴注《三国志·孙策传》）；焚香伏拜、立坛祈雨、镜中索命出自《三国演义》第二十九回。
+
+本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#于吉", "#孙策", "#符水", "#奇人异士", "#三国演义", "#历史", "#水墨动画", "#AI动画", "#知识分享"], "video": "于吉.mp4", "cover": "封面.jpg", "cover_time": 2.0, "spec": {"w": 1920, "h": 1080, "dur": 30.4, "size_mb": 15.72, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": ""}, {"folder": "2026-10-13-华佗", "batch": "2026-10-13", "name": "华佗", "key": "huatuo", "title": "华佗 · 三国第一神医", "sub": "水墨动画 · 30秒看完麻沸散与五禽戏", "desc": "水墨动画版《华佗》，30 秒讲完三国最神的一位医者。
+
+沛国华佗字元化 → 晓养性之术，年且百岁而犹有壮容 → 精于方药，处剂不过数种 → 饮麻沸散而刳腹湔洗，世界外科麻醉之始 → 作五禽之戏，以当导引 → 为关公刮骨疗毒，血流盈盘而谈笑弈棋 → 曹公苦头风，针鬲随手而差 → 临死出一卷书与狱吏，吏畏法不受，索火烧之，青囊不传。
+
+注意：华佗事迹见《三国志·魏书·方技传》（与管辂同传）；「刮骨疗毒」出自《三国演义》第七十五回，正史无华佗为关羽疗伤事；「青囊书付狱吏被焚」见本传，演义第七十八回据此演为「治风疾神医身死」。
+
+本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#华佗", "#麻沸散", "#五禽戏", "#刮骨疗毒", "#神医", "#奇人异士", "#三国志", "#水墨动画", "#AI动画"], "video": "华佗.mp4", "cover": "封面.jpg", "cover_time": 2.0, "spec": {"w": 1920, "h": 1080, "dur": 30.4, "size_mb": 15.76, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": ""}, {"folder": "2026-10-13-管辂", "batch": "2026-10-13", "name": "管辂", "key": "guanlu", "title": "管辂 · 三国第一神卜", "sub": "水墨动画 · 30秒看完占验如神", "desc": "水墨动画版《管辂》，30 秒讲完三国最神的一位术士。
+
+平原管辂，少仰星辰 → 明《周易》，仰观风角占相无不精微 → 武城西自卦，果见三貍 → 何晏问卦、梦青蝇集鼻，答以「位峻者颠，轻豪者亡」→ 归告舅氏，曰「与死人语，何所畏邪」→ 岁朝西北大风，尘埃蔽天，何晏邓飏皆诛 → 桑下献脯，南斗添寿 → 自知寿止四十八，天有常数。
+
+注意：管辂事迹见《三国志·魏书·方技传》（与华佗同传）；桑下献脯、南斗添寿出自《三国演义》第六十九回，属文学虚构。
+
+本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#管辂", "#何晏", "#占卜", "#奇人异士", "#三国志", "#历史", "#水墨动画", "#AI动画", "#知识分享"], "video": "管辂.mp4", "cover": "封面.jpg", "cover_time": 2.0, "spec": {"w": 1920, "h": 1080, "dur": 30.4, "size_mb": 15.72, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": ""}, {"folder": "2026-10-14-王异", "batch": "2026-10-14", "name": "王异", "key": "wangyi", "title": "王异 · 三国唯一上过城墙的女将", "sub": "水墨动画 · 30秒守住一座冀城", "desc": "水墨动画版《王异》，30 秒讲完三国唯一一位亲自上城守御的女子。
+
+赵昂为羌道令，留异在西；同郡梁双反，攻破西城，害异两男，只余六岁的女儿英 → 她引刀欲自刎，回头看女儿，叹「身死尔弃，当谁恃哉」→ 于是以溷粪涅麻披身，尠食瘠形，自春至冬，乱兵从她身边走过而未见，竟以此免难 → 建安中马超攻冀，她躬著布韝（皮臂鞲），佐昂守备，又悉脱所佩环、黼黻以赏战士 → 刺史韦康欲与超和，昂谏不听，她说：当共勉卒高勋，全节致死，不可从也 → 超背约害康，又劫昂，质其子月于南郑；昂问「当奈月何」，她厉声：忠义立于身，雪君父之大耻，丧元不足为重，况一子哉 → 昂遂闭门逐超；异与昂保祁山，为超所围三十日，救兵到乃解。
+
+史书给她的最后七个字是——凡自冀城之难，至于祁山，昂出九奇，异辄参焉。她不是站在丈夫身后，她是参与决策的那个人。
+
+注意：全片八幕均出自《三国志·魏书·卷二十五·杨阜传》裴松之注引皇甫谧《列女传》，无一处虚构。
+
+本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#王异", "#三国女性", "#马超", "#冀城之战", "#赵昂", "#祁山", "#列女传", "#历史", "#水墨动画", "#AI动画"], "video": "王异.mp4", "cover": "封面.jpg", "cover_time": 2.0, "spec": {"w": 1920, "h": 1080, "dur": 30.4, "size_mb": 17.58, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": ""}, {"folder": "2026-10-14-甄后", "batch": "2026-10-14", "name": "甄后", "key": "zhenhou", "title": "甄后 · 她靠「识」在乱世里活成皇太后", "sub": "水墨动画 · 30秒讲完文昭甄皇后", "desc": "水墨动画版《甄后》，30 秒讲完三国最特殊的那位皇后——她的名字本不在史书里，只称「文昭甄皇后」；《甄宓》之名，是后世拿曹植《洛神赋》宓妃附会出来的，本片一律用「甄后」，不取洛神之说。\n\n中山无极人，汉太保甄邯之后；父逸，上蔡令，三岁失父 → 《魏书》：每寝寐，家中仿佛见有人持玉衣覆其上，相者刘良曰「此女贵乃不可言」 → 年八岁，外有立骑马戏者，诸姊皆上阁观之，后独不行：「此岂女人之所观邪」 → 年九岁喜书，视字辄识，数用诸兄笔砚；兄曰「汝当习女工，用书为学，当作女博士邪」，后答「闻古者贤女，未有不学前世成败以为己诫；不知书，何由见之」 → 天下兵乱饥馑，百姓皆卖金银珠玉，后家大有储谷，颇以买之；后年十余岁白母：「今世乱而多买宝物，匹夫无罪，怀璧为罪；又左右皆饥乏，不如以谷振给亲族邻里」，举家称善 → 建安中，袁绍为中子熙纳之；熙出为幽州，后留养姑 → 邺城破，绍妻及后共坐皇堂，后怖以头伏姑膝上，文帝谓「令新妇举头」，就视见其颜色非凡，遂为迎取 → 入魏为后，生明帝及东乡公主；郭后、李、阴贵人并爱幸，后愈失意，有怨言 → 黄初二年六月，遣使赐死，葬于邺 → 明帝即位追谥；太和元年营宗庙，掘地得玉玺，方一寸九分，其文曰「天子羡思慈亲」，明帝为之改容；景初元年立寝庙特祀。\n\n史书给她的最后一笔，是儿子刻在玉玺上的四个字——天子羡思慈亲。她不是洛神，她是一个在乱世里先看懂危险的女人。\n\n注意：全片八幕均出自《三国志·魏书·卷五·后妃传》及裴松之注引《魏书》《魏略》，无一处虚构；不取《洛神赋》宓妃附会之说。\n\n本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#甄后", "#三国女性", "#曹丕", "#袁熙", "#邺城", "#文昭甄皇后", "#魏书后妃", "#历史", "#水墨动画", "#AI动画"], "video": "甄后.mp4", "cover": "封面.jpg", "cover_time": 2.0, "spec": {"w": 1920, "h": 1080, "dur": 30.4, "size_mb": 15.84, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": ""}, {"folder": "2026-10-14-甄后·敦煌", "batch": "2026-10-14", "name": "甄后·敦煌", "key": "zhenhou_dunhuang", "title": "甄后 · 敦煌壁画篇｜她靠「识」在乱世里活成皇太后", "sub": "敦煌风重绘 · 30秒文昭甄皇后", "desc": "敦煌壁画风重绘版《甄后》（莫高窟·盛唐）：同一段史实，换一层视觉——土红地仗、剥落斑、飞天祥云、唐代供养人（石青短襦／间色裙／披帛／高髻簪花／花钿斜红）。30 秒讲完三国最特殊的那位皇后——她本传无名，只称「文昭甄皇后」；《甄宓》之名是后世拿《洛神赋》宓妃附会出来的，本片一律用「甄后」，不取洛神之说。\n\n中山无极人，汉太保甄邯之后；父逸，上蔡令，三岁失父 → 《魏书》：每寝寐，家中仿佛见有人持玉衣覆其上，相者刘良曰「此女贵乃不可言」 → 年九岁喜书，视字辄识，兄戏问「当作女博士邪」，她答「不知书，何由见之」 → 天下兵乱，她劝母以谷振给亲族邻里，「匹夫无罪，怀璧为罪」 → 袁绍为中子熙纳之，熙出幽州，她留养姑 → 邺城破，文帝谓「令新妇举头」，见其颜色非凡，遂为迎取 → 郭后并爱幸，她愈失意 → 黄初二年六月，遣使赐死 → 明帝即位，掘地得玉玺，其文曰「天子羡思慈亲」。\n\n史书给她的最后一笔，是儿子刻在玉玺上的四个字——天子羡思慈亲。她不是洛神，她是一个在乱世里先看懂危险的女人。\n\n注意：全片八幕均出自《三国志·魏书·卷五·后妃传》及裴松之注引《魏书》《魏略》，无一处虚构；不取《洛神赋》宓妃附会之说。本片画面由代码逐帧绘制的敦煌壁画风笔触生成，配音与字幕为 AI 合成（配音同水墨版）。", "tags": ["#三国", "#甄后", "#敦煌", "#敦煌壁画", "#莫高窟", "#三国女性", "#文昭甄皇后", "#历史", "#AI动画"], "video": "甄后·敦煌.mp4", "cover": "封面.jpg", "cover_time": 2.0, "spec": {"w": 1920, "h": 1080, "dur": 30.4, "size_mb": 30.48, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": ""}, {"folder": "2026-10-14-蔡文姬", "batch": "2026-10-14", "name": "蔡文姬", "key": "caiwenji", "title": "蔡文姬 · 她靠记忆把四千卷书救回来", "sub": "水墨动画 · 30秒讲完胡中十二年", "desc": "水墨动画版《蔡文姬》，30 秒讲完三国最会读书、也被命运碾得最狠的一位女子。
+
+陈留蔡琰，字文姬，蔡邕之女 → 幼年夜闻父鼓琴，弦绝，她说第二弦；父亲故意再断一根，她说第四弦，并不差谬 → 适河东卫仲道，夫亡无子，归宁于家 → 兴平中天下丧乱，为胡骑所获，没于南匈奴左贤王，在胡中十二年，生二子 → 曹操素与蔡邕善，痛其无嗣，遣使者以金璧赎之，重嫁董祀 → 董祀犯法当死，她蓬首徒行，入满堂公卿之中叩头请罪，音辞清辩，旨甚酸哀，众皆为改容 → 曹操说「文状已去，奈何」，她答「明公厩马万匹，虎士成林，何惜疾足一骑，而不济垂死之命乎」，曹操派人追回了判死的文书 → 曹操问她家藏坟籍还能不能记起来，她说：亡父赐书四千许卷，流离涂炭，罔有存者，今所诵忆，裁四百余篇耳；曹操要派十吏来她家抄写，她说男女之别、礼不亲授，乞给纸笔，真草唯命 → 于是缮书送之，文无遗误。
+
+注意：全片八幕均出自《后汉书·卷八十四·列女传·董祀妻蔡琰》，无一处虚构；不取《胡笳十八拍》（唐人拟作）。她被掳走十二年，回来后把烧掉的四千卷凭记忆写了回来。
+
+本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#蔡文姬", "#三国女性", "#文姬归汉", "#曹操", "#悲愤诗", "#后汉书", "#列女传", "#历史", "#水墨动画", "#AI动画"], "video": "蔡文姬.mp4", "cover": "封面.jpg", "cover_time": 2.0, "spec": {"w": 1920, "h": 1080, "dur": 30.4, "size_mb": 19.05, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": ""}, {"folder": "2026-10-14-辛宪英", "batch": "2026-10-14", "name": "辛宪英", "key": "xinxianying", "title": "辛宪英 · 三国最被低估的女谋士", "sub": "水墨动画 · 30秒看完三次神准预言", "desc": "水墨动画版《辛宪英》，30 秒讲完三国最会看人的一位女子。
+
+陇西辛氏，字宪英，魏侍中辛毗之女 → 曹丕得立为太子，抱着辛毗的脖子问「知我喜不」，宪英叹：宜戚而喜，何以能久，魏其不昌乎 → 高平陵之变，太傅闭城门，弟辛敞惧而问姊 → 她说：太傅此举不过以诛曹爽耳 → 敞问「然则敞无出乎」，她说：安可以不出，职守人之大义也 → 敞遂出，事后叹：吾不谋于姊，几不获于义 → 钟会为镇西将军，她说：吾畏其有他志 → 子羊琇随征，她诫：军旅之间可以济者，其惟仁恕乎 → 会至蜀果反，琇竟以全归；羊祜送锦被，她嫌其华，反而覆之。
+
+注意：全片八幕均出自《晋书·卷九十六·列女传·羊耽妻辛氏》，无一处虚构。她不是战场人物，也不是方士——她的武器是判断。
+
+本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#辛宪英", "#三国女性", "#高平陵之变", "#钟会", "#晋书", "#列女传", "#历史", "#水墨动画", "#AI动画"], "video": "辛宪英.mp4", "cover": "封面.jpg", "cover_time": 2.0, "spec": {"w": 1920, "h": 1080, "dur": 30.4, "size_mb": 16.88, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": ""}, {"folder": "2026-10-21-法正", "batch": "2026-10-21", "name": "法正", "key": "fazheng", "title": "法正 · 刘备的谋主，奇谋善断", "sub": "水墨动画 · 25秒看完法孝直", "desc": "水墨动画版《法正》，25 秒讲完蜀汉第一谋主。
+
+右扶风法正，字孝直 → 入蜀依刘璋，为新都令、军议校尉 → 张松谋迎先主，正衔命涪水相迎 → 内外相济，遂定益州，赐爵关内侯 → 定军献策，斩夏侯渊于阵 → 王汉中，以为尚书令、护军将军 → 章武元年卒，谥翼侯 → 夷陵之败，武侯叹「孝直若在，能制主上」。
+
+他画的奇计，是刘备一生最锋利的那把刀。
+
+本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#法正", "#刘备", "#定军山", "#夏侯渊", "#谋士", "#历史", "#水墨动画", "#AI动画", "#知识分享"], "video": "法正.mp4", "cover": "封面.jpg", "cover_time": 10.7, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 12.25, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": ""}, {"folder": "2026-10-21-满宠", "batch": "2026-10-21", "name": "满宠", "key": "manchong", "title": "满宠 · 执法峻刻的魏之宿将", "sub": "水墨动画 · 25秒看完满伯宁", "desc": "水墨动画版《满宠》，25 秒讲完曹魏一员执法宿将。
+
+山阳满宠，字伯宁 → 为许令，曹洪宾客犯法，宠收治不挠，太祖善之 → 从太祖，迁汝南太守，募兵破敌 → 与张辽、李典共守合肥，拒孙权 → 迁奋威将军，封安昌亭侯 → 文帝即位，为征东将军，进封南乡侯 → 明帝时表筑合肥新城，徙屯据险 → 薨，谥景侯。
+
+他执法峻刻、临敌有谋，合肥与新城皆其功。
+
+本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#满宠", "#曹操", "#合肥", "#新城", "#执法", "#历史", "#水墨动画", "#AI动画", "#知识分享"], "video": "满宠.mp4", "cover": "封面.jpg", "cover_time": 7.3, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 13.37, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": ""}, {"folder": "2026-10-21-许褚", "batch": "2026-10-21", "name": "许褚", "key": "xuchu", "title": "许褚 · 虎痴，曹公的樊哙", "sub": "水墨动画 · 25秒看完许仲康", "desc": "水墨动画版《许褚》，25 秒讲完曹魏一员虎将。
+
+谯国巨汉 → 聚宗族坚壁御寇 → 率众归曹，太祖曰「此吾樊哙也」→ 从征张绣、袁绍、马超 → 潼关瞋目，马超不敢动 → 常侍太祖、不离左右 → 曹丕即位，迁武卫将军 → 太和六年卒，谥壮侯。
+
+腰大十围，勇力绝人，三国里最像樊哙的那个人。
+
+本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#许褚", "#虎痴", "#曹操", "#潼关", "#历史", "#水墨动画", "#AI动画", "#知识分享"], "video": "许褚.mp4", "cover": "封面.jpg", "cover_time": 13.3, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 13.71, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": ""}, {"folder": "2026-10-21-许靖", "batch": "2026-10-21", "name": "许靖", "key": "xujing", "title": "许靖 · 名重天下的一代名士", "sub": "水墨动画 · 25秒看完许文休", "desc": "水墨动画版《许靖》，25 秒讲完蜀汉一位名重天下的名士。
+
+汝南许靖，与从弟许劭俱知名、好核论人物 → 董卓乱，周旋州郡、南走交州 → 辗转入蜀，依刘璋为蜀郡太守 → 先主围成都，靖窃欲逾城出降 → 法正言于先主「靖名重天下，宜加敬」→ 克成都，以为左将军长史 → 先主称帝，拜司徒 → 章武二年卒，谥文休。
+
+他不是猛将，却以盛名左右了一座城的归属。
+
+本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#许靖", "#名士", "#刘备", "#法正", "#历史", "#水墨动画", "#AI动画", "#知识分享"], "video": "许靖.mp4", "cover": "封面.jpg", "cover_time": 10.7, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 13.65, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": ""}, {"folder": "2026-10-21-魏延", "batch": "2026-10-21", "name": "魏延", "key": "weiyan", "title": "魏延 · 镇汉中，奇谋未竟", "sub": "水墨动画 · 25秒看完魏文长", "desc": "水墨动画版《魏延》，25 秒讲完蜀汉一员悍将。
+
+义阳从军 → 入蜀冲阵 → 独镇汉中、北拒曹公 → 北伐每请兵万人、与亮异道会潼关 → 祁山鏖兵、勇冠三军 → 进征西大将军、封南郑侯 → 武侯既没、争权衅起 → 为马岱所斩，夷三族。
+
+他请兵万人、分道出潼关的奇谋，诸葛亮终未采纳；后世多替他不平。
+
+本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#魏延", "#汉中", "#诸葛亮", "#北伐", "#历史", "#水墨动画", "#AI动画", "#知识分享"], "video": "魏延.mp4", "cover": "封面.jpg", "cover_time": 13.3, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 14.48, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": ""}, {"folder": "2026-10-23-关羽", "batch": "2026-10-23", "name": "关羽", "key": "guanyu", "title": "关羽 · 义薄云天，败走麦城", "sub": "水墨动画 · 25秒看完关云长", "desc": "水墨动画版《关羽》，25 秒讲完武圣关羽的一生。
+
+亡命奔涿 → 桃园结义，誓以生死相随 → 白马坡单骑斩颜良 → 封金挂印、义不苟留 → 千里独行、过关斩将 → 华容道念旧释曹 → 水淹七军、威震华夏 → 吕蒙袭后，败走麦城。
+
+义字成全了他，也困住了他。", "tags": ["#三国", "#历史", "#水墨动画", "#AI动画", "#知识分享", "#关羽", "#桃园结义", "#麦城"], "video": "关羽.mp4", "cover": "封面.jpg", "cover_time": 7.6, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 13.82, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": "新出"}, {"folder": "2026-10-23-刘备", "batch": "2026-10-23", "name": "刘备", "key": "liubei", "title": "刘备 · 仁义半生，白帝托孤", "sub": "水墨动画 · 25秒看完刘玄德", "desc": "水墨动画版《刘备》，25 秒讲完昭烈帝刘备的一生。
+
+少孤，贩履织席 → 桃园结义，得关张为兄弟 → 三顾茅庐，隆中定策 → 曹操南下，携民渡江不忍弃之 → 入蜀取益州，成鼎足之势 → 关羽既殁，举兵伐吴，夷陵一炬 → 白帝托孤，付社稷于孔明。
+
+仁义让他得了人心，也让他失了时机。", "tags": ["#三国", "#历史", "#水墨动画", "#AI动画", "#知识分享", "#刘备", "#三顾茅庐", "#白帝城"], "video": "刘备.mp4", "cover": "封面.jpg", "cover_time": 7.6, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 12.77, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": "新出"}, {"folder": "2026-10-23-司马懿", "batch": "2026-10-23", "name": "司马懿", "key": "simayi", "title": "司马懿 · 隐忍半生，一击夺国", "sub": "水墨动画 · 25秒看完司马仲达", "desc": "水墨动画版《司马懿》，25 秒讲完晋宣帝司马懿的一生。
+
+河内人，鹰视狼顾 → 诸葛亮出祁山，懿据险不战 → 亮遗巾帼以辱之，懿受而不怒 → 五丈原对峙百日终不出垒 → 远征辽东，百日破公孙渊 → 高平陵之变，一举夺曹爽之权 → 父子相继专权，魏祚遂移 → 晋室之基，实肇于此。
+
+他一生只赢了一次，就赢下了整个天下。", "tags": ["#三国", "#历史", "#水墨动画", "#AI动画", "#知识分享", "#司马懿", "#高平陵", "#晋"], "video": "司马懿.mp4", "cover": "封面.jpg", "cover_time": 16.7, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 12.09, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": "新出"}, {"folder": "2026-10-23-吕布", "batch": "2026-10-23", "name": "吕布", "key": "lvbu", "title": "吕布 · 三姓反复，飞将白门楼", "sub": "水墨动画 · 25秒看完吕奉先", "desc": "水墨动画版《吕布》，25 秒讲完三国第一猛将的崛起与陨落。
+
+五原吕布，弓马骁勇，号飞将 → 杀丁原而投董卓，人讥三姓 → 虎牢关前独战诸侯 → 王允连环、郿坞诛卓 → 袭取徐州、反复无常 → 辕门射戟解两家之兵 → 白门楼被缚，乞哀求生 → 缢死枭首。
+
+一个能独战诸侯的人，最终败给了自己的反复。", "tags": ["#三国", "#历史", "#水墨动画", "#AI动画", "#知识分享", "#吕布", "#虎牢关", "#白门楼"], "video": "吕布.mp4", "cover": "封面.jpg", "cover_time": 7.6, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 12.88, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": "新出"}, {"folder": "2026-10-23-吕蒙", "batch": "2026-10-23", "name": "吕蒙", "key": "lvmeng", "title": "吕蒙 · 士别三日，白衣渡江", "sub": "水墨动画 · 25秒看完吕子明", "desc": "水墨动画版《吕蒙》，25 秒讲完东吴大都督的一生。
+
+汝南富陂人，家贫，少年南渡依姊夫邓当 → 年十五六窃随当击贼，母怒将罚，蒙曰「不探虎穴，安得虎子」→ 军吏轻之曰「此欲以肉喂虎耳」，蒙大怒引刀杀吏 → 校尉袁雄为言于策，策召见奇之 → 邓当死，张昭荐蒙代当 → 权统事，蒙阴赊赀为兵作绛衣行縢，权见之大悦 → 从征黄祖，蒙勒前锋亲枭就首 → 权劝读书，蒙悟而折节，鲁肃拊背曰「非复吴下阿蒙」，蒙曰「士别三日，即更刮目相待」→ 建安二十四年称病笃，说权取荆州；伏精兵舳舻中，使白衣摇橹作商贾人服，昼夜兼行，至羽所置江边屯候，尽收缚之，羽不闻知 → 士仁、糜芳皆降 → 麾下士取民家一笠覆官铠，蒙以为犯军令，垂涕斩之，于是军中震栗，道不拾遗 → 是岁病发，权迎置内殿，四十二岁卒。
+
+从杀人者到读书人，他只用了三年。
+
+本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#吕蒙", "#白衣渡江", "#孙权", "#荆州", "#刮目相待", "#历史", "#水墨动画", "#AI动画", "#知识分享"], "video": "吕蒙.mp4", "cover": "封面.jpg", "cover_time": 19.6, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 13.27, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": "重制"}, {"folder": "2026-10-23-周瑜", "batch": "2026-10-23", "name": "周瑜", "key": "zhouyu", "title": "周瑜 · 赤壁一炬，既生瑜何生亮", "sub": "水墨动画 · 25秒看完周公瑾", "desc": "水墨动画版《周瑜》，25 秒讲完美周郎周瑜的一生。
+
+庐江人，与孙策同年相友善 → 佐孙策定江东，时年二十四 → 赤壁之战火攻破曹，天下震动 → 攻南郡中流矢，仍督战不休 → 荆州之借久争不决 → 既生瑜何生亮，仰天长叹 → 巴丘道中病卒，年三十六 → 儒将风流，曲有误，周郎顾。
+
+三十六岁的都督，赢下赤壁，输给了心气。", "tags": ["#三国", "#历史", "#水墨动画", "#AI动画", "#知识分享", "#周瑜", "#赤壁", "#既生瑜何生亮"], "video": "周瑜.mp4", "cover": "封面.jpg", "cover_time": 7.6, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 13.6, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": "重制"}, {"folder": "2026-10-23-孙权", "batch": "2026-10-23", "name": "孙权", "key": "sunquan", "title": "孙权 · 坐断东南，晚年昏聩", "sub": "水墨动画 · 25秒看完孙仲谋", "desc": "水墨动画版《孙权》，25 秒讲完吴大帝孙权的一生。
+
+兄策遇刺，继领江东 → 曹操南下，群臣欲降，权拔刀断案 → 筑濡须坞，拒曹于江上 → 合肥十万，为张辽所破 → 武昌称帝，建号黄龙 → 晚年二宫之争，骨肉相残 → 猜忌杀戮，吴政日衰 → 江东之主，前后五十二年。
+
+十九岁接位，五十二年守成，最后败给了猜忌。", "tags": ["#三国", "#历史", "#水墨动画", "#AI动画", "#知识分享", "#孙权", "#赤壁", "#江东"], "video": "孙权.mp4", "cover": "封面.jpg", "cover_time": 4.4, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 14.02, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": "新出"}, {"folder": "2026-10-23-张昭", "batch": "2026-10-23", "name": "张昭", "key": "zhangzhao", "title": "张昭 · 江东老仲父，一手持板", "sub": "水墨动画 · 25秒看完张子布", "desc": "水墨动画版《张昭》，25 秒讲完东吴首辅的一生。
+
+彭城人，少好学善隶书，弱冠察孝廉不就 → 汉末乱，率士民南渡江 → 孙策创业，命为长史、抚军中郎将，升堂拜母如比肩之旧 → 策临亡以弟权托昭，昭率群僚立而辅之，身自扶权上马 → 权每田猎，昭变色而前谏 → 魏使邢贞入门不下车，昭叱之遽下车 → 武昌钓台酗酒，昭正色不言而出 → 公孙渊称藩，权按刀怒，昭涕泣，权掷刀对泣 → 昭称疾不朝，权土塞其门，昭又于内以土封之 → 容貌矜严有威风，权曰「孤与张公言，不敢妄也」→ 年八十一卒，遗令幅巾素棺，谥文侯。
+
+他手里的板，比许多人的刀更重。
+
+本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#张昭", "#孙权", "#东吴", "#直谏", "#历史", "#水墨动画", "#AI动画", "#知识分享"], "video": "张昭.mp4", "cover": "封面.jpg", "cover_time": 16.7, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 13.0, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": "重制"}, {"folder": "2026-10-23-张飞", "batch": "2026-10-23", "name": "张飞", "key": "zhangfei", "title": "张飞 · 万人之敌，阆中暴卒", "sub": "水墨动画 · 25秒看完张翼德", "desc": "水墨动画版《张飞》，25 秒讲完万人之敌张翼德。
+
+涿郡屠户，勇冠三军 → 桃园结义 → 长坂桥头横矛一喝，曹军辟易 → 义释严颜，尽得巴郡之心 → 宕渠山道以少破张郃 → 镇守巴西，魏人不敢犯 → 阆中帐下鞭卒招祸，为部将所害。
+
+他能喝退百万兵，却管不住自己的鞭子。", "tags": ["#三国", "#历史", "#水墨动画", "#AI动画", "#知识分享", "#张飞", "#长坂坡", "#阆中"], "video": "张飞.mp4", "cover": "封面.jpg", "cover_time": 7.6, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 12.97, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": "新出"}, {"folder": "2026-10-23-徐晃", "batch": "2026-10-23", "name": "徐晃", "key": "xuhuang", "title": "徐晃 · 长驱径入，有周亚夫之风", "sub": "水墨动画 · 25秒看完徐公明", "desc": "水墨动画版《徐晃》，25 秒讲完曹魏名将的一生。
+
+河东杨人，为郡吏从杨奉 → 说奉与天子还洛阳 → 归太祖，击破原武贼 → 从破颜良，拔白马，延津破文丑 → 官渡之役，火烧袁绍运车于故市 → 潼关假道蒲阪，夜渡津破马超 → 樊城长驱径入，破关羽十重围堑 → 太祖曰「徐将军可谓有周亚夫之风矣」→ 破上庸，进封阳平侯 → 太和元年薨，谥壮侯。
+
+他一生赢下的最险一仗，靠的不是勇，是先为不可胜。
+
+本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#徐晃", "#曹操", "#樊城", "#白袍", "#历史", "#水墨动画", "#AI动画", "#知识分享"], "video": "徐晃.mp4", "cover": "封面.jpg", "cover_time": 16.7, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 13.21, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": "重制"}, {"folder": "2026-10-23-曹操", "batch": "2026-10-23", "name": "曹操", "key": "caocao", "title": "曹操 · 治世能臣，乱世奸雄", "sub": "水墨动画 · 25秒看完曹孟德", "desc": "水墨动画版《曹操》，25 秒讲完魏武帝曹操的一生。
+
+洛阳北部尉，五色棒不避豪强 → 陈留起兵，奉天子以令不臣 → 官渡焚乌巢之粮，一夕破袁绍 → 赤壁连舟，东风火起，折戟北还 → 潼关割须弃袍 → 进爵魏王，铜雀台成，遗令分香 → 治世能臣，乱世奸雄。
+
+他一生赢下官渡，却输给了一场东风。", "tags": ["#三国", "#历史", "#水墨动画", "#AI动画", "#知识分享", "#曹操", "#官渡", "#赤壁"], "video": "曹操.mp4", "cover": "封面.jpg", "cover_time": 7.6, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 13.04, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": "重制"}, {"folder": "2026-10-23-诸葛亮", "batch": "2026-10-23", "name": "诸葛亮", "key": "zhugeliang", "title": "诸葛亮 · 鞠躬尽瘁，星落五丈原", "sub": "水墨动画 · 25秒看完诸葛孔明", "desc": "水墨动画版《诸葛亮》，25 秒讲完卧龙诸葛亮的一生。
+
+琅琊人，躬耕陇亩 → 三顾之后，隆中对定三分 → 赤壁借东风，一炬破曹 → 白帝受遗诏，鞠躬尽瘁 → 五月渡泸，深入不毛，平定南中 → 六出祁山，屡以弱攻强 → 五丈原上秋风萧瑟，将星欲坠 → 星落之后，蜀人巷哭。
+
+知其不可为而为之，是他的悲壮，也是他的伟大。", "tags": ["#三国", "#历史", "#水墨动画", "#AI动画", "#知识分享", "#诸葛亮", "#隆中对", "#五丈原"], "video": "诸葛亮.mp4", "cover": "封面.jpg", "cover_time": 7.6, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 13.01, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": "新出"}, {"folder": "2026-10-23-貂蝉", "batch": "2026-10-23", "name": "貂蝉", "key": "diaochan", "title": "貂蝉 · 一计倾国，芳踪杳然", "sub": "水墨动画 · 25秒看完连环计", "desc": "水墨动画版《貂蝉》，25 秒讲完三国最著名的一场连环计。
+
+王允府中歌伎，色艺双绝 → 夜告汉室倾危 → 先许吕布、再献董卓 → 一入郿坞，父子之隙已成 → 凤仪亭泣诉 → 父子反目 → 郿坞火起，董卓伏诛 → 事成之后，不知所终。
+
+一个歌伎，用一计拆了董卓与吕布。", "tags": ["#三国", "#历史", "#水墨动画", "#AI动画", "#知识分享", "#貂蝉", "#董卓", "#连环计"], "video": "貂蝉.mp4", "cover": "封面.jpg", "cover_time": 13.8, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 12.91, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": "重制"}, {"folder": "2026-10-23-陆逊", "batch": "2026-10-23", "name": "陆逊", "key": "lusun", "title": "陆逊 · 一把茅，烧尽四十馀营", "sub": "水墨动画 · 25秒看完陆伯言", "desc": "水墨动画版《陆逊》，25 秒讲完东吴书生名将的一生。
+
+吴郡吴人，世江东大族，少孤随祖庐江太守康在官 → 出为海昌屯田都尉，县连年亢旱，开仓谷以振贫民，劝督农桑 → 讨山越，所向皆服，部曲二千余人 → 权以兄策女配逊，尝问世务，献「腹心未平，曷能图远」之策 → 讨费栈，益施牙幢，夜潜山谷，整编东三郡，得精卒数万人 → 淳于式劾之，逊反荐之，权善之 → 吕蒙荐之代镇陆口，书与羽谦下，羽意大安，无复所嫌 → 刘备率众伐吴，权命逊为大都督假节，督五万人，相持七八月，逊坚壁不出 → 先攻一营不利，诸将曰「空杀兵耳」，逊曰「吾已晓破之之术」，敕各持一把茅，以火攻拔之 → 一尔势成，破其四十馀营 → 备升马鞍山，逊督促诸军四面蹙之，死者数万 → 备夜遁仅得入白帝城，舟船器械一时略尽，尸骸漂流塞江而下，备大惭恚曰「吾乃为逊所折辱」→ 权加拜辅国将军、领荆州牧，改封江陵侯。
+
+他赢下夷陵，用的是耐心和一把茅。
+
+本片画面由代码逐帧绘制的水墨笔触生成，配音与字幕为 AI 合成。", "tags": ["#三国", "#陆逊", "#夷陵", "#刘备", "#火攻", "#历史", "#水墨动画", "#AI动画", "#知识分享"], "video": "陆逊.mp4", "cover": "封面.jpg", "cover_time": 16.7, "spec": {"w": 1920, "h": 1080, "dur": 24.8, "size_mb": 13.11, "orientation": "横屏"}, "gate": {"voice": true, "subtitle": true, "issues": [], "passed": true}, "warnings": ["横屏片，视频号竖屏展示会上下留黑边（封面已做模糊填充，正片建议套竖版模板）"], "badge": "重制"}], "batches": ["2026-10-23", "2026-10-21", "2026-10-14", "2026-10-13", "2026-10-12", "2026-10-11", "2026-10-10"]};
+const LS = 'wxch_uploaded_v1';
+const ROOT_KEY = 'wxch_root_v1';
+function matRoot(){
+  let r = localStorage.getItem(ROOT_KEY);
+  if (r) return r.replace(/[\\/]+$/, '') + '/';
+  return './';   // 未配置：默认与上传台同目录
+}
+function setRoot(){
+  const cur = localStorage.getItem(ROOT_KEY) || './';
+  const v = prompt('素材（成片）根目录：上传台所在目录填 ./，否则填绝对路径，如 D:/media/ sanguo-out/', cur);
+  if (v == null) return;
+  localStorage.setItem(ROOT_KEY, v.trim() || './');
+  document.getElementById('rootDisp').textContent = matRoot();
+  toast('根目录已更新');
+}
+function rootDispInit(){ document.getElementById('rootDisp').textContent = matRoot(); }
+let done = JSON.parse(localStorage.getItem(LS) || '{}');
+let filter = 'all', kw = '', batch = '';
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const folderName = f => f.split('/').pop();
+
+// 批次下拉
+const bs = [...new Set(DATA.batches)];
+bs.forEach(b => $('#batch').insertAdjacentHTML('beforeend', `<option value="${b}">${b}</option>`));
+
+function match(it){
+  if (batch && it.batch !== batch) return false;
+  if (filter === 'new'   && !(it.badge === '新出')) return false;
+  if (filter === 'redo'  && it.badge !== '重制') return false;
+  if (filter === 'todo'  && done[it.key]) return false;
+  if (kw){
+    const hay = (it.name + it.title + it.sub + it.desc + it.tags.join(' ') + it.key).toLowerCase();
+    if (!hay.includes(kw)) return false;
+  }
+  return true;
+}
+
+function render(){
+  const list = DATA.items.filter(match);
+  const total = DATA.items.length;
+  $('#stat').innerHTML = `显示 <b>${list.length}</b> / ${total} 部 · 已发 <b>${Object.keys(done).length}</b>`;
+  $('#cnt').textContent = total;
+  $('#empty').style.display = list.length ? 'none' : 'block';
+  $('#grid').innerHTML = list.map(it => {
+    const sp = it.spec || {}, g = it.gate || {};
+    const d = done[it.key];
+    return `
+    <div class="card ${d ? 'done' : ''}" data-k="${it.key}">
+      <div class="cover" onclick="zoom('${it.folder}/${it.cover}')">
+        <img loading="lazy" src="${it.folder}/${it.cover}" alt="${esc(it.name)}">
+        ${it.badge ? `<span class="badge ${it.badge === '重制' ? 'redo' : ''}">${it.badge}</span>` : ''}
+        <span class="ct">封面帧 ${it.cover_time}s</span>
+      </div>
+      <div class="body">
+        <div>
+          <div class="t">${esc(it.name)}</div>
+          <div class="t2">${esc(it.sub || '')}</div>
+        </div>
+        <div class="meta">
+          <span>${sp.w || 1920}×${sp.h || 1080}</span>
+          <span>${sp.dur || 24.8}s</span>
+          <span>${sp.size_mb || '?'} MB</span>
+          <span class="gate">门禁${g.passed ? '通过' : '未过'}</span>
+          <span>${it.batch}</span>
+        </div>
+        ${(it.warnings || []).length ? `<div class="warn">⚠ ${esc(it.warnings[0])}</div>` : ''}
+        <div class="copyrow">
+          <button class="p" onclick="cp('title','${it.key}')">复制标题</button>
+          <button onclick="cp('desc','${it.key}')">复制描述</button>
+          <button onclick="cp('tags','${it.key}')">复制话题</button>
+          <button class="ghost" onclick="cp('path','${it.key}')">复制视频路径</button>
+          <button class="ghost" onclick="play('${it.folder}/${it.video}')">试看</button>
+        </div>
+        <div class="path" id="p-${it.key}">${esc(it.folder + '\\' + it.video)}</div>
+        <div class="foot">
+          <label><input type="checkbox" ${d ? 'checked' : ''} onchange="mark('${it.key}', this.checked)"> 已上传发布</label>
+          <span style="flex:1"></span>
+          <span style="font-size:11px;color:var(--dim2)">${d ? esc(d) : ''}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function get(k){ return DATA.items.find(x => x.key === k); }
+
+function cp(kind, key){
+  const it = get(key);
+  let txt = '';
+  if (kind === 'title') txt = it.title;
+  if (kind === 'desc')  txt = it.desc;
+  if (kind === 'tags')  txt = it.tags.join(' ');
+  if (kind === 'path')  txt = matRoot() + it.folder + '/' + it.video;
+  const ok = () => toast('已复制：' + (kind === 'path' ? '视频路径' : kind === 'title' ? '标题' : kind === 'desc' ? '描述' : '话题'));
+  if (navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(txt).then(ok).catch(() => fb(txt, ok));
+  } else fb(txt, ok);
+}
+function fb(txt, ok){
+  const ta = document.createElement('textarea');
+  ta.value = txt; ta.style.cssText = 'position:fixed;left:-9999px;top:0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); ok(); } catch(e){ toast('复制失败，请手动选择'); }
+  document.body.removeChild(ta);
+}
+function mark(k, v){
+  if (v) done[k] = new Date().toLocaleString('zh-CN', { hour12: false }).replace(/\//g, '-');
+  else delete done[k];
+  localStorage.setItem(LS, JSON.stringify(done));
+  render();
+}
+let tt;
+function toast(m){
+  const t = $('#toast'); t.textContent = m; t.classList.add('on');
+  clearTimeout(tt); tt = setTimeout(() => t.classList.remove('on'), 1500);
+}
+function zoom(src){
+  const lb = $('#lb'), im = $('#lbimg');
+  im.src = src; im.tagName = 'IMG'; lb.classList.add('on');
+}
+function play(src){
+  const lb = $('#lb');
+  lb.innerHTML = `<video src="${src}" controls autoplay></video>`;
+  lb.classList.add('on');
+}
+$('#lb').onclick = () => { $('#lb').classList.remove('on'); $('#lb').innerHTML = '<img id="lbimg" alt="">'; };
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#lb').click(); });
+
+$('#q').oninput = e => { kw = e.target.value.trim().toLowerCase(); render(); };
+$('#batch').onchange = e => { batch = e.target.value; render(); };
+document.querySelectorAll('.chip').forEach(c => c.onclick = () => {
+  document.querySelectorAll('.chip').forEach(x => x.classList.remove('on'));
+  c.classList.add('on'); filter = c.dataset.f; render();
+});
+
+render();
+rootDispInit();
+(function(){
+  const items = DATA.items || [];
+  const passed = items.filter(x => x.gate && x.gate.passed).length;
+  document.getElementById('gateStat').textContent = passed + '/' + items.length + ' 已通过';
+})();
+</script>
+</body>
+</html>
