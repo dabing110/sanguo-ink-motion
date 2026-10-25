@@ -2,6 +2,9 @@ MIT License
 
 Copyright (c) 2026 dabing110
 
+本仓库包含第三方 MIT 代码（引擎底座 © 花叔 Huashu / alchaincyf）与 SIL OFL 字体，
+各部分版权归属与来源明细见 NOTICE 文件；使用本仓库即同时遵守各对应许可。
+
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights

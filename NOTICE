@@ -1,0 +1,33 @@
+# NOTICE
+
+本仓库采用 MIT License（见 `LICENSE`），但包含来自不同作者的代码，各部分归属如下：
+
+## 引擎底座（第三方，MIT）
+
+`engine/engine.js`、`engine/index.html`、`engine/clip.html`、`engine/clip.js`、`engine/transitions.js`、`engine/eras.js`、`engine/eras_gallery.js` 及 `engine/lib/` 下的全部文件，复制自：
+
+> huashu-art-motion — https://github.com/alchaincyf/huashu-art-motion
+> MIT License © 花叔 Huashu（alchaincyf）
+> 该技能以 MIT 发布（"代码和文档：MIT。随便用，随便改，随便造。"），
+> 本仓库保留其版权与许可声明。
+
+`pipeline/render.py` 源自该技能的 `scripts/engine/render.py`，本仓库的修改：
+ffmpeg 路径参数化（FFMPEG_BIN/PATH 兜底）、分段渲染参数、目录布局适配。
+
+`pipeline/qa/` 下的静态检查脚本与 `pipeline/compare.py` 的用法亦受该技能 QA 体系影响。
+
+## 字体（第三方，SIL OFL 1.1）
+
+`engine/lib/fonts/` 内各字体沿用各自的 SIL OFL 1.1 许可，清单见同目录 `LICENSES.md`。
+
+## 原创部分（本仓库作者 dabing110）
+
+- 41 部人物的剧本、台词轴（`data/lines_*.json`）与段落表（`engine/eras_*.js`）
+- 249 个三国场景（`engine/scenes/`）
+- `pipeline/build_voice.py`、`pipeline/build_voice_winrt.py`、`pipeline/prepare_channels.py`、`pipeline/fill_lines.py`
+- `publish/`（上传台与发布元数据）、`docs/`（方法论文档）
+
+## 备注
+
+花叔的卡通形象骨架（rig_huashu.js）不在 MIT 授权范围内（原技能声明"只用于本 skill 的示范，
+不随 MIT 授权用于其他用途"），**已从本仓库移除**，未随本仓库再分发。

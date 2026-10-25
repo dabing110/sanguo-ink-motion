@@ -148,4 +148,8 @@ sanguo-ink-motion/
 
 ## 致谢
 
+**引擎底座来自花叔的 [huashu-art-motion](https://github.com/alchaincyf/huashu-art-motion)**（MIT © 花叔 Huashu）：本仓库 `engine/` 下的确定性帧引擎（`engine.js`、`index.html`、`transitions.js`）与 `engine/lib/` 的 17 个绘画/动效库（brush、paint、render、post、rig、motion、camera、diagram、typo、chart、ui、collage、toon、kit、util、fonts.js 等）均复制自该技能的 `scripts/engine/`，`pipeline/render.py` 亦源自其渲染器（本仓库仅做了 ffmpeg 路径参数化、分段渲染与目录布局调整）。该技能同时提供了「复制引擎 → 改 `eras.js` 段落表 → 写 `scenes/<id>.js`」的开新片工作流，本项目照此执行。
+
+本仓库的原创部分：41 部人物的剧本与台词轴（`data/lines_*.json`）、249 个三国场景（`engine/scenes/`）、40 个段落表（`engine/eras_*.js`）、配音/门禁/发布流水线脚本，以及全部方法论文档。
+
 水墨笔法库的「干笔 + 平涂 + 描边」混合画法，来自对《三国演义》连环画与现代水墨动画的长期观察；工程结构受「确定性渲染」思想影响（同 t 必同帧，QA 才能回归）。
